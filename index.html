@@ -130,6 +130,7 @@
             background-position: center;
             background-repeat: no-repeat;
             padding: 20px;
+            box-sizing: border-box; /* Keep padding inside the screen width so nothing is pushed off the right edge */
             z-index: 3; /* Below loading screen initially */
             opacity: 0; /* Hidden by default, fades in */
             pointer-events: none; /* Prevent interaction until faded in */
@@ -250,7 +251,7 @@
             overflow-y: auto;
             width: 100%;
             box-sizing: border-box;
-            /* Updated: Now uses Bonheur Royale font with slightly bolder weight */
+            padding: 4px 14px 4px 12px; /* Room for the script font's swashes so letters aren't clipped at the edges */
             font-family: 'Bonheur Royale', cursive;
             font-weight: 700; /* Set to bolder weight if available, or just 'bold' */
             line-height: 1.6;
@@ -529,7 +530,7 @@
             <div class="envelope-front"></div>
             <div class="envelope-flap">
                 <span class="open-me" id="openMeSpan">Open Me</span>
-                <span class="heart">❤️</span>
+                <span class="heart">🌰</span>
             </div>
             <div class="envelope-letter" id="letter">
                 <div class="letter-content" id="letterContent"></div>
