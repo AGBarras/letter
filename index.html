@@ -33,6 +33,83 @@
             z-index: 4; /* Higher z-index than main to hide it initially */
             transition: opacity 1s ease; /* For fading out the loading screen */
         }
+        /* Squirrel riding a flying saucer across the "You've Got Mail" screen */
+        .space-squirrel {
+            position: absolute;
+            top: 18%;
+            left: 0;
+            z-index: 0; /* Behind the button, loading bar and text */
+            pointer-events: none;
+            opacity: 0; /* Hidden until "You've Got Mail" is clicked */
+            transform: translateX(-120px); /* Waiting just off the left edge */
+        }
+        .space-squirrel.flying {
+            opacity: 1;
+            animation: fly-across 9.5s linear forwards; /* One trip across while the mail loads */
+        }
+        .space-squirrel-bob {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: bob 1.2s ease-in-out infinite alternate;
+        }
+        .space-squirrel .rider {
+            font-size: 34px;
+            line-height: 1;
+            margin-bottom: -14px; /* Sit down onto the saucer */
+            transform: scaleX(-1); /* Face the direction of travel */
+        }
+        .space-squirrel .ship {
+            font-size: 56px;
+            line-height: 1;
+        }
+        @keyframes fly-across {
+            from { transform: translateX(-120px); }
+            to   { transform: translateX(calc(100vw + 20px)); }
+        }
+        @keyframes bob {
+            from { transform: translateY(-8px) rotate(-4deg); }
+            to   { transform: translateY(8px) rotate(4deg); }
+        }
+
+        /* Shooting stars behind the squirrel */
+        .sky {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .shooting-star {
+            position: absolute;
+            width: 140px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(212, 175, 55, 0), #d4af37 70%, #f5d77a);
+            border-radius: 2px;
+            opacity: 0;
+            transform: rotate(32deg) translateX(0);
+            animation: shoot var(--dur, 6s) linear infinite;
+            animation-delay: var(--delay, 0s);
+        }
+        .shooting-star::after { /* Bright head of the star */
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: -2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #f5d77a;
+            box-shadow: 0 0 6px 2px rgba(212, 175, 55, 0.8); /* Golden glow */
+        }
+        @keyframes shoot {
+            0%   { opacity: 0; transform: rotate(32deg) translateX(0); }
+            3%   { opacity: 1; }
+            15%  { opacity: 0; transform: rotate(32deg) translateX(500px); }
+            100% { opacity: 0; transform: rotate(32deg) translateX(500px); }
+        }
+
+
         .button-container {
             margin-bottom: 40px; /* Button positioned higher */
             z-index: 1; /* Below loading elements */
@@ -307,6 +384,10 @@
         .envelope.open .emoji:nth-child(22) { animation: firework 0.9s ease forwards 0.51s; }
         .envelope.open .emoji:nth-child(23) { animation: firework 0.9s ease forwards 0.52s; }
         .envelope.open .emoji:nth-child(24) { animation: firework 0.9s ease forwards 0.53s; }
+        .envelope.open .emoji:nth-child(25) { animation: firework 0.9s ease forwards 0.54s; }
+        .envelope.open .emoji:nth-child(26) { animation: firework 0.9s ease forwards 0.55s; }
+        .envelope.open .emoji:nth-child(27) { animation: firework 0.9s ease forwards 0.56s; }
+        .envelope.open .emoji:nth-child(28) { animation: firework 0.9s ease forwards 0.57s; }
 
         @keyframes firework {
             0% {
@@ -515,6 +596,13 @@
 </head>
 <body>
     <div class="container" id="loadingContainer">
+        <div class="sky" id="sky" aria-hidden="true"></div>
+        <div class="space-squirrel" id="spaceSquirrel" aria-hidden="true">
+            <div class="space-squirrel-bob">
+                <span class="rider">🐿️</span>
+                <span class="ship">🛸</span>
+            </div>
+        </div>
         <div class="arc-container" id="arcContainer">
             <svg width="300" height="100" viewBox="0 0 300 100" preserveAspectRatio="xMidYMid meet">
                 <path id="arcPath" class="arc-path" d="M 20 90 A 140 140 0 0 1 280 90" />
@@ -618,8 +706,30 @@
             loadingBarInner.appendChild(block);
         }
 
+        // Create shooting stars at random spots, speeds and timings
+        const sky = document.getElementById('sky');
+        const spaceSquirrel = document.getElementById('spaceSquirrel');
+        // Stars are only created once "You've Got Mail" is clicked
+        function launchStars() {
+            const numStars = 9;
+            for (let i = 0; i < numStars; i++) {
+                const star = document.createElement('div');
+                star.classList.add('shooting-star');
+                star.style.left = `${Math.random() * 90 - 10}%`;
+                star.style.top = `${Math.random() * 55}%`;
+                star.style.setProperty('--dur', `${4 + Math.random() * 3}s`);
+                star.style.setProperty('--delay', `${Math.random() * 3}s`); // All start within the first 3 seconds of loading
+                sky.appendChild(star);
+            }
+        }
+
         // --- Loading Animation Function ---
         function startLoading() {
+            // The squirrel takes off on its saucer as soon as the button is clicked
+            spaceSquirrel.classList.add('flying');
+            // ...and the gold shooting stars start at the same moment
+            launchStars();
+
             const blocks = document.querySelectorAll('.loading-block');
             // Adjusted positions for HTML div relative to the centered loadingContainer
             const phrases = [
@@ -744,13 +854,13 @@
             `My time these past weeks has been dedicated to looking inwards and pay attention to the feelings traversing me. This is the first time actually, I ever give myself the space to sit down with them. It’s challenging to say the least, and it has put me in a place where I dont feel safe anymore, on the edge, and mostly alone and isolated. Thankfully, our home seems like a safe space now for this type of work.`,
             `I realize that I have difficulty discerning between emotions, experiencing them as big waves that mostly drown me, making me feel numb and paralyzed. This happens on a regular basis, and our last exchanges have shown me that, yet again, when I become incapable of clearly voicing what i feel, pushing me to retreat.`,
             `For so long I thought I could make with it, trusting that it would pass, but clearly it’s much deeper. The work I started is just beginning to show me what to look for and pay attention to, and the road ahead feels overwhelming, and unsurmountable. But I want to believe it to be the first step to breakthrough the wall of fears that has been dictating my actions on so many levels. I also believe that practice with myself and challenging my fears with love are ultimately the key to overcome the wall.`,
-            `Like most, my fears stem from my childhood, and I have been able to cope with them, disguising my disabilities through sheer will and survival. And it worked, until it didn’t anymore. And now it’s all unfolding, and there’s no way around it but straight. The worst is the isolation I can feel and the damage I cause.`,
+            `Like most, my fears stem from my childhood, and I have been able to cope with them, disguising my handicap through sheer will and survival. And it worked, until it didn’t anymore. And now it’s all unfolding, and there’s no way around it but straight. The worst is the isolation I can feel and the damage I cause.`,
             `My struggles are real, and I can’t help but feel them holding me back from experiencing true love. It’s clear that I am having trouble with affirmation, triggers, and internalization. Emphasized even more now, since im paying attention. And this scares me.`,
             `I want to make you feel safe and I want to love you simply. Not drive us through a torment.`,
             `We both deserve stability and reliability. Not intensity and swings.`,
             `My heart and my soul need companionship, and I know love is the answer. But how can I love reliably if I dont even know who I am? That’s crazy.`,
             `I need to tune in more and practice those qualities I wish to foster and develop.`,
-            `What now? tuning in, communicating, practicing. By myself, this seems unsurmountable. Together, as partners. I couldn’t bear making us go through another torment again. Together, as friends. I know we can, but I can’t deny the feelings I have for you. The thought of it makes me want to just snap out of it and make you mine.`,
+            `What now? tuning in, communicating, practicing. By myself, this seems unsurmountable. Together, as partners. I couldn’t bear making us go through a torment again. Together, as friends. I know we can, but I can’t deny the feelings I have for you. The thought of it makes me want to just snap out of it and make you mine.`,
             `À mes yeux, tu es irremplaçable et l’amour de ma vie.`,
             `Damien`,
             
