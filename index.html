@@ -143,6 +143,15 @@
             pointer-events: auto; /* Enable interaction when active */
         }
 
+        /* On computer screens: make the photo slightly wider than the screen and pin it left,
+           which moves the squirrel ~70px to the right so it sits just beside the open letter */
+        @media (min-width: 769px) {
+            main {
+                background-size: max(calc(100% + 160px), 177.78vh) auto;
+                background-position: left center;
+            }
+        }
+
         .envelope {
             width: 40vw;
             height: 26.67vw;
@@ -535,30 +544,30 @@
             <div class="envelope-letter" id="letter">
                 <div class="letter-content" id="letterContent"></div>
             </div>
-            <span class="emoji">🌸</span>
-            <span class="emoji">❤️</span>
-            <span class="emoji">🌹</span>
-            <span class="emoji">💖</span>
-            <span class="emoji">🌷</span>
-            <span class="emoji">💕</span>
-            <span class="emoji">🌺</span>
-            <span class="emoji">💓</span>
-            <span class="emoji">🌻</span>
-            <span class="emoji">💗</span>
-            <span class="emoji">💐</span>
-            <span class="emoji">💞</span>
-            <span class="emoji">🌼</span>
-            <span class="emoji">❤️</span>
-            <span class="emoji">🪷</span>
-            <span class="emoji">💖</span>
-            <span class="emoji">🌸</span>
-            <span class="emoji">💕</span>
-            <span class="emoji">🌹</span>
-            <span class="emoji">💓</span>
-            <span class="emoji">🌷</span>
-            <span class="emoji">💗</span>
-            <span class="emoji">🌺</span>
-            <span class="emoji">💞</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🍂</span>
+            <span class="emoji">🌰</span>
+            <span class="emoji">🍄</span>
+            <span class="emoji">🍃</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🍂</span>
+            <span class="emoji">🌰</span>
+            <span class="emoji">🍎</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🍂</span>
+            <span class="emoji">🍄</span>
+            <span class="emoji">🌰</span>
+            <span class="emoji">🍃</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🍂</span>
+            <span class="emoji">🌰</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🍂</span>
+            <span class="emoji">🍄</span>
+            <span class="emoji">🍃</span>
+            <span class="emoji">🍁</span>
+            <span class="emoji">🌰</span>
+            <span class="emoji">🍂</span>
         </div>
     </main>
     <button class="download-btn" id="downloadBtn" data-emoji="📥">Download Letter</button>
